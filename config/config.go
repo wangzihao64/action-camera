@@ -3,6 +3,7 @@ package config
 import (
 	"action-camera/cache"
 	"action-camera/dao"
+	"os"
 	"strings"
 
 	"gopkg.in/ini.v1"
@@ -37,6 +38,11 @@ func LoadRedis(file *ini.File) {
 	RedisPassword = file.Section("redis").Key("RedisPassword").String()
 	RedisDB = file.Section("redis").Key("RedisDB").MustInt()
 	RedisPoolSize = file.Section("redis").Key("RedisPoolSize").MustInt()
+
+	// 环境变量覆盖配置文件
+	if envHost := os.Getenv("REDIS_HOST"); envHost != "" {
+		RedisHost = envHost
+	}
 }
 
 func LoadMysql(file *ini.File) {
@@ -46,6 +52,11 @@ func LoadMysql(file *ini.File) {
 	DbUser = file.Section("mysql").Key("DbUser").String()
 	DbPassword = file.Section("mysql").Key("DbPassword").String()
 	DbName = file.Section("mysql").Key("DbName").String()
+
+	// 环境变量覆盖配置文件
+	if envHost := os.Getenv("DB_HOST"); envHost != "" {
+		DbHost = envHost
+	}
 }
 func LoadEmail(file *ini.File) {
 	SmtpHost = file.Section("email").Key("SmtpHost").String()
